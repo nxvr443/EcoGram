@@ -108,6 +108,10 @@ jobs:
         run: |
           %TBUILD%\%REPO_NAME%\Telegram\build\prepare\win.bat silent qt6
 
+      - name: Free up some disk space
+        shell: bash
+        run: find $LibrariesPath '(' '(' ! '(' -name '*.lib' -o -name '*.a' -o -name '*.exe' -o -name '*.h' -o -name '*.hpp' -o -name '*.inc' -o -name '*.cmake' -o -name '*.pc' -o -path '*/include/*' -o -path '*/objects-*' -o -path '*/cache_keys/*' -o -path '*/patches/*' -o -path '*/nv-codec-headers/*' ')' -type f ')' -o -empty ')' -delete
+
       - name: Build Telegram Desktop
         run: |
           cd %TBUILD%\%REPO_NAME%\Telegram
@@ -117,6 +121,8 @@ jobs:
           qt6 ^
           -D TDESKTOP_API_TEST=ON ^
           -D CMAKE_CONFIGURATION_TYPES=%BUILD_TYPE% ^
+          -D CMAKE_COMPILE_WARNING_AS_ERROR=OFF ^
+          -D CMAKE_MSVC_DEBUG_INFORMATION_FORMAT= ^
           -D DESKTOP_APP_DISABLE_AUTOUPDATE=ON ^
           -D DESKTOP_APP_DISABLE_CRASH_REPORTS=ON
 
