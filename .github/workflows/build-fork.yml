@@ -11,14 +11,7 @@ on:
         options:
           - Release
           - Debug
-  push:
-    branches:
-      - dev
-      - master
-      - main
-    paths:
-      - 'Telegram/**'
-      - '.github/workflows/**'
+
 
 jobs:
   build-windows:
