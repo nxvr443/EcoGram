@@ -17,9 +17,8 @@ on:
       - master
       - main
     paths:
-      - 'Telegram/SourceFiles/**'
-      - 'Telegram/CMakeLists.txt'
-      - '.github/workflows/build-fork.yml'
+      - 'Telegram/**'
+      - '.github/workflows/**'
 
 jobs:
   build-windows:
