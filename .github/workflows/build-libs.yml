@@ -98,14 +98,24 @@ jobs:
       - name: Clean intermediate object files
         shell: bash
         run: |
+          rm -rf "$LibrariesPath/libjxl/tools" "$LibrariesPath/libjxl/third_party/brotli/research" 2>/dev/null || true
+          find "$LibrariesPath" -xtype l -delete 2>/dev/null || true
           find $LibrariesPath '(' '(' ! '(' -name '*.lib' -o -name '*.a' -o -name '*.exe' -o -name '*.h' -o -name '*.hpp' -o -name '*.inc' -o -name '*.cmake' -o -name '*.pc' -o -path '*/include/*' -o -path '*/objects-*' -o -path '*/cache_keys/*' -o -path '*/patches/*' -o -path '*/nv-codec-headers/*' ')' -type f ')' -o -empty ')' -delete
 
       - name: Compress Libraries Package
         run: |
           cd /d "%userprofile%\TBuild"
-          dir /b Libraries
-          dir /b ThirdParty
-          7z a -mx=3 "%GITHUB_WORKSPACE%\libraries-win64.zip" Libraries ThirdParty
+          7z a -mx=3 -snl -xr!benchmark "%GITHUB_WORKSPACE%\libraries-win64.zip" Libraries ThirdParty
+          if %errorlevel% gtr 1 (
+            echo 7-Zip encountered fatal error %errorlevel%
+            exit /b %errorlevel%
+          )
+          if not exist "%GITHUB_WORKSPACE%\libraries-win64.zip" (
+            echo ERROR: Archive was not created!
+            exit /b 1
+          )
+          echo Archive libraries-win64.zip verified successfully!
+          exit /b 0
 
       - name: Publish to GitHub Release
         uses: softprops/action-gh-release@v2
@@ -113,7 +123,7 @@ jobs:
           tag_name: prebuilt-libs
           name: "Prebuilt Libraries (Windows x64)"
           body: "Precompiled third-party libraries (Qt6, WebRTC, FFmpeg, OpenSSL, etc.) for EcoGram."
-          files: libraries-win64.zip
+          files: ${{ github.workspace }}/libraries-win64.zip
           draft: false
           prerelease: false
         env:
