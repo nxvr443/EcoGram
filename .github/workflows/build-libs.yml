@@ -93,6 +93,9 @@ jobs:
 
       - name: Compile All Libraries
         run: |
+          if exist "%LibrariesPath%\cache_keys\tdesktop_rust" (
+            del /f /q "%LibrariesPath%\cache_keys\tdesktop_rust"
+          )
           %TBUILD%\%REPO_NAME%\Telegram\build\prepare\win.bat skip-release silent qt6
 
       - name: Clean intermediate object files
@@ -100,7 +103,7 @@ jobs:
         run: |
           rm -rf "$LibrariesPath/libjxl/tools" "$LibrariesPath/libjxl/third_party/brotli/research" 2>/dev/null || true
           find "$LibrariesPath" -xtype l -delete 2>/dev/null || true
-          find $LibrariesPath '(' '(' ! '(' -name '*.lib' -o -name '*.a' -o -name '*.exe' -o -name '*.h' -o -name '*.hpp' -o -name '*.inc' -o -name '*.cmake' -o -name '*.pc' -o -path '*/include/*' -o -path '*/objects-*' -o -path '*/cache_keys/*' -o -path '*/patches/*' -o -path '*/nv-codec-headers/*' ')' -type f ')' -o -empty ')' -delete
+          find $LibrariesPath '(' '(' ! '(' -name '*.lib' -o -name '*.a' -o -name '*.exe' -o -name '*.h' -o -name '*.hpp' -o -name '*.cpp' -o -name '*.inc' -o -name '*.cmake' -o -name '*.pc' -o -path '*/include/*' -o -path '*/src/*' -o -path '*/objects-*' -o -path '*/cache_keys/*' -o -path '*/patches/*' -o -path '*/nv-codec-headers/*' ')' -type f ')' -o -empty ')' -delete
 
       - name: Compress Libraries Package
         run: |
