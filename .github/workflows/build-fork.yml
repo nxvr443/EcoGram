@@ -62,7 +62,7 @@ jobs:
         shell: bash
         run: |
           echo "Fetching prebuilt libraries from GitHub Release..."
-          gh release download prebuilt-libs --pattern "libraries-win64.zip" --repo ${{ github.repository }} --dir "$RUNNER_TEMP" || true
+          curl.exe -L -o "$RUNNER_TEMP/libraries-win64.zip" "https://github.com/${{ github.repository }}/releases/download/prebuilt-libs/libraries-win64.zip" || gh release download prebuilt-libs --pattern "libraries-win64.zip" --repo ${{ github.repository }} --dir "$RUNNER_TEMP" || true
           if [ -f "$RUNNER_TEMP/libraries-win64.zip" ]; then
             echo "Unpacking prebuilt libraries package..."
             7z x "$RUNNER_TEMP/libraries-win64.zip" -o"$USERPROFILE/TBuild" -y
@@ -92,11 +92,22 @@ jobs:
           cmake --build ..\out --config %BUILD_TYPE% --parallel
 
       - name: Package Release
+        shell: bash
         run: |
-          set OUT=%TBUILD%\%REPO_NAME%\out\%BUILD_TYPE%
-          mkdir TelegramFork-x64
-          copy %OUT%\Telegram.exe TelegramFork-x64\
-          copy %OUT%\Updater.exe TelegramFork-x64\ || echo "No updater"
+          mkdir -p TelegramFork-x64
+          EXE_PATH=$(find "$TBUILD/$REPO_NAME/out" -name "Telegram.exe" | head -n 1)
+          if [ -z "$EXE_PATH" ]; then
+            echo "ERROR: Telegram.exe not found!"
+            find "$TBUILD/$REPO_NAME/out" -maxdepth 3
+            exit 1
+          fi
+          echo "Found Telegram.exe at: $EXE_PATH"
+          cp "$EXE_PATH" TelegramFork-x64/
+          UPDATER_PATH=$(find "$TBUILD/$REPO_NAME/out" -name "Updater.exe" | head -n 1)
+          if [ -n "$UPDATER_PATH" ]; then
+            cp "$UPDATER_PATH" TelegramFork-x64/
+          fi
+          ls -lh TelegramFork-x64/
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
