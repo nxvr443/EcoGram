@@ -72,6 +72,7 @@ void LaunchMaps(const Data::LocationPoint &point, Fn<void()> fail);
 [[nodiscard]] QString LocalizedCurrencyName(
 	const QString &currency,
 	const QString &languageId);
+void PurgeProcessMemory();
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 5, 0)
 [[nodiscard]] std::optional<bool> IsDarkMode();

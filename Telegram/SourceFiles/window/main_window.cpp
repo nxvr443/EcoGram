@@ -54,10 +54,6 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "platform/mac/global_menu_mac.h"
 #endif // Q_OS_MAC
 
-#ifdef Q_OS_WIN
-#include "base/platform/win/base_windows_h.h"
-#endif // Q_OS_WIN
-
 #include <QtCore/QMimeData>
 #include <QtGui/QWindow>
 #include <QtGui/QScreen>
@@ -587,10 +583,7 @@ void MainWindow::handleStateChanged(Qt::WindowState state) {
 	updateControlsGeometry();
 	if (state == Qt::WindowMinimized) {
 		controller().updateIsActiveBlur();
-#ifdef Q_OS_WIN
-		// EcoGram RAM Freezer: purge unreferenced memory pages on minimize
-		SetProcessWorkingSetSize(GetCurrentProcess(), (SIZE_T)-1, (SIZE_T)-1);
-#endif // Q_OS_WIN
+		Platform::PurgeProcessMemory();
 	} else {
 		controller().updateIsActiveFocus();
 	}
@@ -621,10 +614,7 @@ void MainWindow::handleVisibleChanged(bool visible) {
 		}
 	} else {
 		_maximizedBeforeHide = Core::App().settings().windowPosition().maximized;
-#ifdef Q_OS_WIN
-		// EcoGram RAM Freezer: purge memory when hidden to tray
-		SetProcessWorkingSetSize(GetCurrentProcess(), (SIZE_T)-1, (SIZE_T)-1);
-#endif // Q_OS_WIN
+		Platform::PurgeProcessMemory();
 	}
 
 	handleVisibleChangedHook(visible);

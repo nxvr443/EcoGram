@@ -58,6 +58,9 @@ inline void SetWindowScreenshotProtection(
 		bool enabled) {
 }
 
+inline void PurgeProcessMemory() {
+}
+
 } // namespace Platform
 
 inline void psCheckLocalSocket(const QString &serverName) {

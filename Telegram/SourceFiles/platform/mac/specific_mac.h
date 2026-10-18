@@ -50,6 +50,9 @@ inline QString ExecutablePathForShortcuts() {
 	return cExeDir() + cExeName();
 }
 
+inline void PurgeProcessMemory() {
+}
+
 namespace ThirdParty {
 
 inline void start() {

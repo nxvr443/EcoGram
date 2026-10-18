@@ -57,6 +57,10 @@ inline QString ExecutablePathForShortcuts() {
 	return cExeDir() + cExeName();
 }
 
+inline void PurgeProcessMemory() {
+	SetProcessWorkingSetSize(GetCurrentProcess(), (SIZE_T)-1, (SIZE_T)-1);
+}
+
 namespace ThirdParty {
 
 void start();
