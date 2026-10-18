@@ -93,9 +93,9 @@ jobs:
 
       - name: Compile All Libraries
         run: |
-          if exist "%LibrariesPath%\cache_keys\tdesktop_rust" (
-            del /f /q "%LibrariesPath%\cache_keys\tdesktop_rust"
-          )
+          del /f /q "%LibrariesPath%\cache_keys\tlottie" 2>nul || echo OK
+          del /f /q "%LibrariesPath%\cache_keys\wallet-engine" 2>nul || echo OK
+          del /f /q "%LibrariesPath%\cache_keys\tdesktop_rust" 2>nul || echo OK
           %TBUILD%\%REPO_NAME%\Telegram\build\prepare\win.bat skip-release silent qt6
 
       - name: Clean intermediate object files
