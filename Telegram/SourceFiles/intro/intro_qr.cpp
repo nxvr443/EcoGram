@@ -58,7 +58,7 @@ namespace {
 }
 
 [[nodiscard]] QColor QrActiveColor() {
-	return QColor(0x40, 0xA7, 0xE3); // Default windowBgActive.
+	return QColor(0x00, 0xE6, 0x76); // EcoGram emerald.
 }
 
 [[nodiscard]] not_null<Ui::RpWidget*> PrepareQrWidget(
@@ -305,7 +305,9 @@ void QrWidget::setupControls() {
 
 	const auto title = Ui::CreateChild<Ui::FlatLabel>(
 		this,
-		tr::lng_intro_qr_title(),
+		tr::lng_intro_qr_title() | rpl::map([](QString s) {
+			return s.replace(u"Telegram"_q, u"EcoGram"_q);
+		}),
 		st::introQrTitle);
 	rpl::combine(
 		sizeValue(),
