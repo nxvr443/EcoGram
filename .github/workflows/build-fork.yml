@@ -99,7 +99,7 @@ jobs:
           copy %OUT%\Updater.exe TelegramFork-x64\ || echo "No updater"
 
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: EcoGram-Windows-x64-${{ env.BUILD_TYPE }}
           path: TelegramFork-x64/
