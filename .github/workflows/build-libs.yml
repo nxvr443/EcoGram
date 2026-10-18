@@ -102,8 +102,10 @@ jobs:
 
       - name: Compress Libraries Package
         run: |
-          cd %userprofile%\TBuild
-          7z a -mx=3 %GITHUB_WORKSPACE%\libraries-win64.zip Libraries ThirdParty
+          cd /d "%userprofile%\TBuild"
+          dir /b Libraries
+          dir /b ThirdParty
+          7z a -mx=3 "%GITHUB_WORKSPACE%\libraries-win64.zip" Libraries ThirdParty
 
       - name: Publish to GitHub Release
         uses: softprops/action-gh-release@v2
