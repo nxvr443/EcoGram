@@ -6,19 +6,19 @@ on:
       build_type:
         description: 'Build Configuration'
         required: true
-        default: 'Release'
+        default: 'Debug'
         type: choice
         options:
-          - Release
           - Debug
+          - Release
 
 jobs:
   build-windows:
-    name: Build EcoGram (${{ github.event.inputs.build_type || 'Release' }})
+    name: Build EcoGram (${{ github.event.inputs.build_type || 'Debug' }})
     runs-on: windows-latest
 
     env:
-      BUILD_TYPE: ${{ github.event.inputs.build_type || 'Release' }}
+      BUILD_TYPE: ${{ github.event.inputs.build_type || 'Debug' }}
 
     defaults:
       run:
