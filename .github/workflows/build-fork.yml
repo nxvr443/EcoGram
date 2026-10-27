@@ -25,6 +25,28 @@ jobs:
         shell: cmd
 
     steps:
+      - name: Free Disk Space
+        shell: pwsh
+        run: |
+          Write-Host "=== Disk space before cleanup ==="
+          Get-PSDrive C | Select-Object @{Name="FreeGB";Expression={[math]::Round($_.Free/1GB,2)}}, @{Name="UsedGB";Expression={[math]::Round($_.Used/1GB,2)}}
+
+          $paths = @(
+            "C:\Program Files (x86)\Android",
+            "C:\hostedtoolcache\windows\Java",
+            "C:\hostedtoolcache\windows\go",
+            "C:\hostedtoolcache\windows\Ruby"
+          )
+          foreach ($p in $paths) {
+            if (Test-Path $p) {
+              Write-Host "Purging $p..."
+              Remove-Item -Recurse -Force -LiteralPath $p -ErrorAction SilentlyContinue
+            }
+          }
+
+          Write-Host "=== Disk space after cleanup ==="
+          Get-PSDrive C | Select-Object @{Name="FreeGB";Expression={[math]::Round($_.Free/1GB,2)}}, @{Name="UsedGB";Expression={[math]::Round($_.Used/1GB,2)}}
+
       - name: Prepare directories
         run: |
           mkdir %userprofile%\TBuild\Libraries
@@ -66,7 +88,8 @@ jobs:
           if [ -f "$RUNNER_TEMP/libraries-win64.zip" ]; then
             echo "Unpacking prebuilt libraries package..."
             7z x "$RUNNER_TEMP/libraries-win64.zip" -o"$USERPROFILE/TBuild" -y
-            echo "Libraries unpacked successfully!"
+            rm -f "$RUNNER_TEMP/libraries-win64.zip"
+            echo "Libraries unpacked successfully and zip archive deleted!"
           else
             echo "Prebuilt package not found in releases! Running prepare script fallback..."
             cd "$TBUILD/$REPO_NAME"
