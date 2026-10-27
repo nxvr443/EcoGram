@@ -26,26 +26,13 @@ jobs:
 
     steps:
       - name: Free Disk Space
-        shell: pwsh
         run: |
-          Write-Host "=== Disk space before cleanup ==="
-          Get-PSDrive C | Select-Object @{Name="FreeGB";Expression={[math]::Round($_.Free/1GB,2)}}, @{Name="UsedGB";Expression={[math]::Round($_.Used/1GB,2)}}
-
-          $paths = @(
-            "C:\Program Files (x86)\Android",
-            "C:\hostedtoolcache\windows\Java",
-            "C:\hostedtoolcache\windows\go",
-            "C:\hostedtoolcache\windows\Ruby"
-          )
-          foreach ($p in $paths) {
-            if (Test-Path $p) {
-              Write-Host "Purging $p..."
-              Remove-Item -Recurse -Force -LiteralPath $p -ErrorAction SilentlyContinue
-            }
-          }
-
-          Write-Host "=== Disk space after cleanup ==="
-          Get-PSDrive C | Select-Object @{Name="FreeGB";Expression={[math]::Round($_.Free/1GB,2)}}, @{Name="UsedGB";Expression={[math]::Round($_.Used/1GB,2)}}
+          echo Freeing runner disk space...
+          if exist "C:\hostedtoolcache\windows\Java" rd /s /q "C:\hostedtoolcache\windows\Java"
+          if exist "C:\hostedtoolcache\windows\go" rd /s /q "C:\hostedtoolcache\windows\go"
+          if exist "C:\hostedtoolcache\windows\Ruby" rd /s /q "C:\hostedtoolcache\windows\Ruby"
+          if exist "C:\Program Files (x86)\Android" rd /s /q "C:\Program Files (x86)\Android"
+          echo Disk cleanup finished.
 
       - name: Prepare directories
         run: |
