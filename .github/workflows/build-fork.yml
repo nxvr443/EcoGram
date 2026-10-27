@@ -27,11 +27,10 @@ jobs:
     steps:
       - name: Free Disk Space
         run: |
-          echo Freeing runner disk space...
+          echo Freeing runner disk space (Java, Go, Ruby)...
           if exist "C:\hostedtoolcache\windows\Java" rd /s /q "C:\hostedtoolcache\windows\Java"
           if exist "C:\hostedtoolcache\windows\go" rd /s /q "C:\hostedtoolcache\windows\go"
           if exist "C:\hostedtoolcache\windows\Ruby" rd /s /q "C:\hostedtoolcache\windows\Ruby"
-          if exist "C:\Program Files (x86)\Android" rd /s /q "C:\Program Files (x86)\Android"
           echo Disk cleanup finished.
 
       - name: Prepare directories
