@@ -1136,6 +1136,8 @@ void Call::createAndStartController(const MTPDphoneCall &call) {
 			.receiveTimeout = serverConfig.callPacketTimeoutMs / 1000.,
 			.dataSaving = tgcalls::DataSaving::Never,
 			.enableP2P = call.is_p2p_allowed(),
+			.allowTCP = false,
+			.enableHighBitrateVideo = true,
 			.enableAEC = false,
 			.enableNS = true,
 			.enableAGC = true,
