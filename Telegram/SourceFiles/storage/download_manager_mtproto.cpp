@@ -19,19 +19,20 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 namespace Storage {
 namespace {
 
-constexpr auto kKillSessionTimeout = 15 * crl::time(1000);
-constexpr auto kStartWaitedInSession = 4 * kDownloadPartSize;
-constexpr auto kMaxWaitedInSession = 16 * kDownloadPartSize;
-constexpr auto kStartSessionsCount = 1;
-constexpr auto kMaxSessionsCount = 8;
+// EcoGram: Multi-Stream Turbo Downloader parameters
+constexpr auto kKillSessionTimeout = 60 * crl::time(1000);
+constexpr auto kStartWaitedInSession = 16 * kDownloadPartSize;
+constexpr auto kMaxWaitedInSession = 64 * kDownloadPartSize;
+constexpr auto kStartSessionsCount = 8;
+constexpr auto kMaxSessionsCount = 16;
 constexpr auto kMaxTrackedSessionRemoves = 64;
-constexpr auto kRetryAddSessionTimeout = 8 * crl::time(1000);
-constexpr auto kRetryAddSessionSuccesses = 3;
+constexpr auto kRetryAddSessionTimeout = crl::time(300);
+constexpr auto kRetryAddSessionSuccesses = 1;
 constexpr auto kMaxTrackedSuccesses = kRetryAddSessionSuccesses
 	* kMaxTrackedSessionRemoves;
 constexpr auto kRemoveSessionAfterTimeouts = 4;
 constexpr auto kResetDownloadPrioritiesTimeout = crl::time(200);
-constexpr auto kBadRequestDurationThreshold = 8 * crl::time(1000);
+constexpr auto kBadRequestDurationThreshold = 15 * crl::time(1000);
 
 // Each (session remove by timeouts) we wait for time:
 // kRetryAddSessionTimeout * max(removesCount, kMaxTrackedSessionRemoves)

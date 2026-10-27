@@ -429,8 +429,10 @@ void Step::prepareCoverMask() {
 	auto maskIntsPerLineAdded = (mask.bytesPerLine() >> 2) - maskWidth;
 	Assert(maskIntsPerLineAdded >= 0);
 	auto realHeight = static_cast<float64>(maskHeight - 1);
+	const auto topColor = QColor(0x11, 0x18, 0x24);
+	const auto bottomColor = QColor(0x0c, 0x1e, 0x16);
 	for (auto y = 0; y != maskHeight; ++y) {
-		auto color = anim::color(st::introCoverTopBg, st::introCoverBottomBg, y / realHeight);
+		auto color = anim::color(topColor, bottomColor, y / realHeight);
 		auto colorInt = anim::getPremultiplied(color);
 		for (auto x = 0; x != maskWidth; ++x) {
 			*maskInts++ = colorInt;
