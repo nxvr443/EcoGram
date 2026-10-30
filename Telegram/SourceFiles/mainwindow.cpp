@@ -642,7 +642,7 @@ bool MainWindow::eventFilter(QObject *object, QEvent *e) {
 			const auto key = static_cast<QKeyEvent*>(e)->key();
 			FeedLangTestingKey(key);
 		}
-#ifdef _DEBUG
+#if 0
 		if (static_cast<QKeyEvent*>(e)->modifiers().testFlag(
 				Qt::ControlModifier)) {
 			switch (static_cast<QKeyEvent*>(e)->key()) {

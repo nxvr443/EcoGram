@@ -166,7 +166,7 @@ namespace {
 	} else if (Platform::IsWindowsARM64()) {
 		result += " arm64";
 	}
-#ifdef _DEBUG
+#if 0
 	result += " DEBUG";
 #endif
 	if (withCommit

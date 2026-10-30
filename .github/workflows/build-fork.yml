@@ -14,11 +14,11 @@ on:
 
 jobs:
   build-windows:
-    name: Build EcoGram (${{ github.event.inputs.build_type || 'Release' }})
+    name: Build EcoGram (Release)
     runs-on: windows-latest
 
     env:
-      BUILD_TYPE: ${{ github.event.inputs.build_type || 'Release' }}
+      BUILD_TYPE: Debug
 
     defaults:
       run:
@@ -51,11 +51,13 @@ jobs:
           submodules: recursive
           path: ${{ env.TBUILD }}\${{ env.REPO_NAME }}
 
-      - name: Apply EcoGram VoIP Turbo Patches
+      - name: Apply EcoGram Patches (VoIP Turbo & Release Polish)
         shell: bash
         run: |
           echo "Applying EcoGram VoIP Turbo optimizations to tgcalls..."
           python "$TBUILD/$REPO_NAME/Telegram/build/patches/voip_turbo.py"
+          echo "Applying EcoGram Release polish patches..."
+          python "$TBUILD/$REPO_NAME/Telegram/build/patches/release_polish.py"
 
       - name: Setup Environment
         shell: bash
@@ -101,7 +103,7 @@ jobs:
           -D CMAKE_CONFIGURATION_TYPES=%BUILD_TYPE% ^
           -D CMAKE_COMPILE_WARNING_AS_ERROR=OFF ^
           -D CMAKE_MSVC_DEBUG_INFORMATION_FORMAT= ^
-          -D CMAKE_CXX_FLAGS_DEBUG="/MTd /O2 /Ob2 /D_DEBUG /DNDEBUG_OPTIMIZED" ^
+          -D CMAKE_CXX_FLAGS_DEBUG="/MTd /O2 /Ob2 /D_DEBUG /DQT_NO_DEBUG" ^
           -D DESKTOP_APP_DISABLE_AUTOUPDATE=ON ^
           -D DESKTOP_APP_DISABLE_CRASH_REPORTS=ON
 
@@ -128,6 +130,6 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: EcoGram-Windows-x64-${{ env.BUILD_TYPE }}
+          name: EcoGram-Windows-x64-Release
           path: TelegramFork-x64/
           retention-days: 14

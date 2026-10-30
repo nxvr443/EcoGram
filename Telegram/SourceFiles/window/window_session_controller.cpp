@@ -1753,7 +1753,7 @@ SessionController::SessionController(
 		setupPremiumToast();
 	});
 
-#if _DEBUG // TEST: Auto-open craft box on startup
+#if 0 // TEST: Auto-open craft box on startup
 	constexpr auto kGiftsCount = 4;
 	crl::on_main(this, [=] {
 		if (rand() % 2 >= 0) {
