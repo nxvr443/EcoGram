@@ -131,6 +131,7 @@ private:
 	QPoint _positionAnimationFrom;
 	QPoint _positionAnimationTo;
 	Ui::Animations::Simple _positionAnimation;
+	crl::time _lastDragProcessTime = 0;
 
 };
 

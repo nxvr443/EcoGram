@@ -52,11 +52,19 @@ constexpr auto kPipLoaderPriority = 2;
 constexpr auto kMsInSecond = 1000;
 
 [[nodiscard]] QRect ScreenFromPosition(QPoint point) {
+	static QRect cachedScreen;
+	static QRect cachedAvailable;
+	if (!cachedScreen.isEmpty() && cachedScreen.contains(point)) {
+		return cachedAvailable;
+	}
 	const auto screen = QGuiApplication::screenAt(point);
 	const auto use = screen ? screen : QGuiApplication::primaryScreen();
-	return use
-		? use->availableGeometry()
-		: QRect(0, 0, st::windowDefaultWidth, st::windowDefaultHeight);
+	if (use) {
+		cachedScreen = use->geometry();
+		cachedAvailable = use->availableGeometry();
+		return cachedAvailable;
+	}
+	return QRect(0, 0, st::windowDefaultWidth, st::windowDefaultHeight);
 }
 
 [[nodiscard]] QSize MaxAllowedSizeForScreen(QSize screenSize) {
@@ -770,6 +778,12 @@ void PipPanel::startSystemDrag() {
 void PipPanel::processDrag(QPoint point) {
 	Expects(_dragState.has_value());
 
+	const auto now = crl::now();
+	if (_lastDragProcessTime > 0 && (now - _lastDragProcessTime) < 4) {
+		return;
+	}
+	_lastDragProcessTime = now;
+
 	const auto dragPart = *_dragState;
 	const auto screen = (dragPart == RectPart::Center)
 		? ScreenFromPosition(point)
@@ -802,20 +816,31 @@ void PipPanel::processDrag(QPoint point) {
 	const auto clamped = (dragPart == RectPart::Center)
 		? ClampToEdges(screen, valid)
 		: valid.topLeft();
-	widget()->setMinimumSize(minimalSize);
-	widget()->setMaximumSize(
-		std::max(minimalSize.width(), maximalSize.width()),
-		std::max(minimalSize.height(), maximalSize.height()));
-	if (clamped != valid.topLeft()) {
-		moveAnimated(clamped);
-	} else {
-		const auto newGeometry = valid.marginsAdded(_padding);
-		_positionAnimation.stop();
+
+	if (dragPart != RectPart::Center) {
+		if (widget()->minimumSize() != minimalSize) {
+			widget()->setMinimumSize(minimalSize);
+		}
+		const auto maxBound = QSize(
+			std::max(minimalSize.width(), maximalSize.width()),
+			std::max(minimalSize.height(), maximalSize.height()));
+		if (widget()->maximumSize() != maxBound) {
+			widget()->setMaximumSize(maxBound);
+		}
+	}
+
+	const auto newGeometry = (dragPart == RectPart::Center)
+		? QRect(clamped, valid.size()).marginsAdded(_padding)
+		: valid.marginsAdded(_padding);
+
+	_positionAnimation.stop();
+	if (widget()->geometry() != newGeometry) {
 		setGeometry(newGeometry);
 	}
 }
 
 void PipPanel::finishDrag(QPoint point) {
+	_lastDragProcessTime = 0;
 	const auto screen = ScreenFromPosition(point);
 	const auto inner = widget()->geometry().marginsRemoved(_padding);
 	const auto position = widget()->pos();
@@ -1028,14 +1053,14 @@ void Pip::handleLeave() {
 
 void Pip::handleMouseMove(QPoint position) {
 	const auto weak = base::make_weak(_panel.widget());
-	const auto guard = gsl::finally([&] {
-		if (weak) {
-			_panel.handleMouseMove(position);
-		}
-	});
-	setOverState(computeState(position));
-	seekUpdate(position);
-	volumeControllerUpdate(position);
+	if (weak) {
+		_panel.handleMouseMove(position);
+	}
+	if (weak && !_panel.dragging()) {
+		setOverState(computeState(position));
+		seekUpdate(position);
+		volumeControllerUpdate(position);
+	}
 }
 
 void Pip::setOverState(OverState state) {
@@ -1123,10 +1148,14 @@ void Pip::handleMousePress(QPoint position, Qt::MouseButton button) {
 }
 
 void Pip::handleMouseRelease(QPoint position, Qt::MouseButton button) {
+	const auto wasDragging = _panel.dragging();
 	const auto weak = base::make_weak(_panel.widget());
 	const auto guard = gsl::finally([&] {
 		if (weak) {
 			_panel.handleMouseRelease(position, button);
+			if (wasDragging) {
+				setOverState(computeState(position));
+			}
 		}
 	});
 	if (button != Qt::LeftButton) {
@@ -1143,7 +1172,7 @@ void Pip::handleMouseRelease(QPoint position, Qt::MouseButton button) {
 	} else if (pressed && *pressed == OverState::VolumeController) {
 		_panel.setDragDisabled(false);
 		_panel.update();
-	} else if (_panel.dragging() || !pressed || *pressed != _over) {
+	} else if (wasDragging || !pressed || *pressed != _over) {
 		_lastHandledPress = std::nullopt;
 	} else {
 		_lastHandledPress = _over;
