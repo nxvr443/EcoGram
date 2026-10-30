@@ -19,6 +19,15 @@ jobs:
         shell: cmd
 
     steps:
+      - name: Free Disk Space
+        run: |
+          echo Freeing runner disk space (Java, Go, Ruby, Android)...
+          if exist "C:\hostedtoolcache\windows\Java" rd /s /q "C:\hostedtoolcache\windows\Java"
+          if exist "C:\hostedtoolcache\windows\go" rd /s /q "C:\hostedtoolcache\windows\go"
+          if exist "C:\hostedtoolcache\windows\Ruby" rd /s /q "C:\hostedtoolcache\windows\Ruby"
+          if exist "C:\hostedtoolcache\windows\Android" rd /s /q "C:\hostedtoolcache\windows\Android"
+          echo Disk cleanup finished.
+
       - name: Prepare directories
         run: |
           mkdir %userprofile%\TBuild\Libraries
@@ -65,7 +74,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ env.TBUILD }}\ThirdParty
-          key: ${{ runner.OS }}-x64-third-party-${{ env.CACHE_KEY }}
+          key: ${{ runner.OS }}-x64-third-party-${{ env.CACHE_KEY }}-rel
           restore-keys: ${{ runner.OS }}-x64-third-party-
 
       - name: Libraries Cache
@@ -78,8 +87,8 @@ jobs:
             !${{ env.LibrariesPath }}\[qQ]t[_-]*
             ${{ env.LibrariesPath }}\cache_keys\*
             !${{ env.LibrariesPath }}\cache_keys\[qQ]t[_-]*
-          key: ${{ runner.OS }}-x64-libs-v2-${{ env.CACHE_KEY }}
-          restore-keys: ${{ runner.OS }}-x64-libs-v2-
+          key: ${{ runner.OS }}-x64-libs-v3-${{ env.CACHE_KEY }}-rel
+          restore-keys: ${{ runner.OS }}-x64-libs-v3-
 
       - name: Qt Cache
         id: cache-qt
@@ -88,7 +97,7 @@ jobs:
           path: |
             ${{ env.LibrariesPath }}\[qQ]t[_-]*
             ${{ env.LibrariesPath }}\cache_keys\[qQ]t[_-]*
-          key: ${{ runner.OS }}-x64-qt6-${{ env.CACHE_KEY }}
+          key: ${{ runner.OS }}-x64-qt6-v2-${{ env.CACHE_KEY }}-rel
           restore-keys: ${{ runner.OS }}-x64-qt6-
 
       - name: Compile All Libraries
@@ -96,7 +105,7 @@ jobs:
           del /f /q "%LibrariesPath%\cache_keys\tlottie" 2>nul || echo OK
           del /f /q "%LibrariesPath%\cache_keys\wallet-engine" 2>nul || echo OK
           del /f /q "%LibrariesPath%\cache_keys\tdesktop_rust" 2>nul || echo OK
-          %TBUILD%\%REPO_NAME%\Telegram\build\prepare\win.bat skip-release silent qt6
+          %TBUILD%\%REPO_NAME%\Telegram\build\prepare\win.bat silent qt6
 
       - name: Clean intermediate object files
         shell: bash

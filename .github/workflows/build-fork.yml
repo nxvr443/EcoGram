@@ -6,19 +6,19 @@ on:
       build_type:
         description: 'Build Configuration'
         required: true
-        default: 'Debug'
+        default: 'Release'
         type: choice
         options:
-          - Debug
           - Release
+          - Debug
 
 jobs:
   build-windows:
-    name: Build EcoGram (${{ github.event.inputs.build_type || 'Debug' }})
+    name: Build EcoGram (${{ github.event.inputs.build_type || 'Release' }})
     runs-on: windows-latest
 
     env:
-      BUILD_TYPE: ${{ github.event.inputs.build_type || 'Debug' }}
+      BUILD_TYPE: ${{ github.event.inputs.build_type || 'Release' }}
 
     defaults:
       run:
@@ -128,6 +128,6 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: EcoGram-Windows-x64-Optimized
+          name: EcoGram-Windows-x64-${{ env.BUILD_TYPE }}
           path: TelegramFork-x64/
           retention-days: 14
