@@ -1137,12 +1137,12 @@ void Call::createAndStartController(const MTPDphoneCall &call) {
 			.dataSaving = tgcalls::DataSaving::Never,
 			.enableP2P = call.is_p2p_allowed(),
 			.allowTCP = false,
-			.enableHighBitrateVideo = true,
 			.enableAEC = false,
 			.enableNS = true,
 			.enableAGC = true,
 			.enableVolumeControl = true,
 			.maxApiLayer = protocol.vmax_layer().v,
+			.enableHighBitrateVideo = true,
 		},
 		.encryptionKey = tgcalls::EncryptionKey(
 			std::move(encryptionKeyValue),
