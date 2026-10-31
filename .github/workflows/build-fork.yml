@@ -129,7 +129,7 @@ jobs:
           ls -lh TelegramFork-x64/
 
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: EcoGram-Windows-x64-Release
           path: TelegramFork-x64/
