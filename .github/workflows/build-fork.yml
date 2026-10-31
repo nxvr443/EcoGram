@@ -99,7 +99,8 @@ jobs:
           call configure.bat ^
           x64 ^
           qt6 ^
-          -D TDESKTOP_API_TEST=ON ^
+          -D TDESKTOP_API_ID=${{ secrets.TDESKTOP_API_ID }} ^
+          -D TDESKTOP_API_HASH=${{ secrets.TDESKTOP_API_HASH }} ^
           -D CMAKE_CONFIGURATION_TYPES=%BUILD_TYPE% ^
           -D CMAKE_COMPILE_WARNING_AS_ERROR=OFF ^
           -D CMAKE_MSVC_DEBUG_INFORMATION_FORMAT= ^
