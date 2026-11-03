@@ -647,7 +647,7 @@ OverlayWidget::PipWrap::PipWrap(
 }
 
 OverlayWidget::OverlayWidget()
-: _wrap(std::make_unique<Ui::GL::Window>(Ui::GL::Window::Translucent::Yes))
+: _wrap(std::make_unique<Ui::GL::Window>(Ui::GL::Window::Translucent::No))
 , _window(_wrap->window())
 , _helper(Platform::CreateOverlayWidgetHelper(_window.get(), [=](bool maximized) {
 	toggleFullScreen(maximized);
@@ -1052,7 +1052,8 @@ void OverlayWidget::setupWindow() {
 	});
 
 	_window->setAttribute(Qt::WA_NoSystemBackground, true);
-	_window->setAttribute(Qt::WA_TranslucentBackground, true);
+	_window->setAttribute(Qt::WA_TranslucentBackground, false);
+	_window->setAttribute(Qt::WA_OpaquePaintEvent, true);
 
 	_window->setMinimumSize(
 		{ st::mediaviewMinWidth, st::mediaviewMinHeight });

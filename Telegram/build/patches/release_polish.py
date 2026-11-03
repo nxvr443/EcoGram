@@ -41,4 +41,12 @@ patch_file(
     '#if 0\n\t\tif (static_cast<QKeyEvent*>(e)->modifiers().testFlag('
 )
 
+# 4. Cinematic solid dark Media Viewer background (replaces translucent DWM glitch)
+colors_palette = os.path.join(base_dir, 'lib_ui', 'ui', 'colors.palette')
+patch_file(
+    colors_palette,
+    'mediaviewBg: #222222eb;',
+    'mediaviewBg: #111113;'
+)
+
 print("Release polish patching complete!")

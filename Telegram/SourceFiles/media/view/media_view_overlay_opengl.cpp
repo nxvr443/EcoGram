@@ -338,9 +338,7 @@ void OverlayWidget::RendererGL::paint(
 }
 
 std::optional<QColor> OverlayWidget::RendererGL::clearColor() {
-	if (_owner->_hideWorkaround) {
-		return QColor(0, 0, 0, 0);
-	} else if (_owner->_fullScreenVideo) {
+	if (_owner->_fullScreenVideo) {
 		return st::mediaviewVideoBg->c;
 	} else {
 		return st::mediaviewBg->c;

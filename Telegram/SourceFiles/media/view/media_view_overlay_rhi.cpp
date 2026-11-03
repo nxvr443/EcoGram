@@ -480,7 +480,7 @@ void OverlayWidget::RendererRhi::render(
 		QRhiRenderTarget *rt,
 		QRhiCommandBuffer *cb) {
 	if (_owner->_hideWorkaround) {
-		cb->beginPass(rt, QColor(0, 0, 0, 0), { 1.0f, 0 });
+		cb->beginPass(rt, rhiClearColor(), { 1.0f, 0 });
 		cb->endPass();
 		return;
 	}
@@ -538,7 +538,7 @@ void OverlayWidget::RendererRhi::render(
 		drawTexturedQuad(_imagePipeline, blackTex, notchCoords);
 	}
 
-	cb->beginPass(rt, QColor(0, 0, 0, 0), { 1.0f, 0 }, _rub);
+	cb->beginPass(rt, rhiClearColor(), { 1.0f, 0 }, _rub);
 	_rub = nullptr;
 
 	for (const auto &cmd : _drawCommands) {
@@ -680,9 +680,7 @@ void OverlayWidget::RendererRhi::releaseResources() {
 }
 
 QColor OverlayWidget::RendererRhi::rhiClearColor() {
-	if (_owner->_hideWorkaround) {
-		return QColor(0, 0, 0, 0);
-	} else if (_owner->_fullScreenVideo) {
+	if (_owner->_fullScreenVideo) {
 		return st::mediaviewVideoBg->c;
 	} else {
 		return st::mediaviewBg->c;
@@ -690,9 +688,7 @@ QColor OverlayWidget::RendererRhi::rhiClearColor() {
 }
 
 std::optional<QColor> OverlayWidget::RendererRhi::clearColor() {
-	if (_owner->_hideWorkaround) {
-		return QColor(0, 0, 0, 0);
-	} else if (_owner->_fullScreenVideo) {
+	if (_owner->_fullScreenVideo) {
 		return st::mediaviewVideoBg->c;
 	} else {
 		return st::mediaviewBg->c;
