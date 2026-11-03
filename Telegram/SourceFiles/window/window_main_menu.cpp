@@ -812,6 +812,20 @@ void MainMenu::setupMenu() {
 			_nightThemeSwitches.fire_copy(*darkMode);
 		}
 	}, _nightThemeToggle->lifetime());
+
+	_ghostModeToggle = addAction(
+		u"Режим призрака"_q,
+		{ &st::menuIconStealth }
+	)->toggleOn(
+		Core::App().settings().ghostModeValue()
+	);
+	_ghostModeToggle->toggledChanges(
+	) | rpl::filter([=](bool ghost) {
+		return (ghost != Core::App().settings().ghostMode());
+	}) | rpl::on_next([=](bool ghost) {
+		Core::App().settings().setGhostMode(ghost);
+		Core::App().saveSettingsDelayed();
+	}, _ghostModeToggle->lifetime());
 }
 
 void MainMenu::resizeEvent(QResizeEvent *e) {

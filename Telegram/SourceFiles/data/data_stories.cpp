@@ -10,6 +10,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "base/unixtime.h"
 #include "apiwrap.h"
 #include "core/application.h"
+#include "core/core_settings.h"
 #include "data/components/top_peers.h"
 #include "data/data_changes.h"
 #include "data/data_channel.h"
@@ -1405,6 +1406,10 @@ void Stories::sendMarkAsReadRequest(
 		checkQuitPreventFinished();
 	};
 
+	if (Core::App().settings().ghostMode() && Core::App().settings().ghostReadStories()) {
+		finish();
+		return;
+	}
 	const auto api = &_owner->session().api();
 	api->request(MTPstories_ReadStories(
 		peer->input(),

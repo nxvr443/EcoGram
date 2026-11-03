@@ -3369,9 +3369,15 @@ void Session::processMessagesDeleted(
 		}
 	}
 	if (!toDestroy.empty()) {
-		notifyItemsAboutToBeDestroyed(toDestroy);
-		for (const auto &item : toDestroy) {
-			item->destroy();
+		if (Core::App().settings().antiDelete()) {
+			for (const auto &item : toDestroy) {
+				item->markDeleted();
+			}
+		} else {
+			notifyItemsAboutToBeDestroyed(toDestroy);
+			for (const auto &item : toDestroy) {
+				item->destroy();
+			}
 		}
 	}
 	for (const auto &history : historiesToCheck) {
@@ -3392,9 +3398,15 @@ void Session::processNonChannelMessagesDeleted(const QVector<MTPint> &data) {
 		}
 	}
 	if (!toDestroy.empty()) {
-		notifyItemsAboutToBeDestroyed(toDestroy);
-		for (const auto &item : toDestroy) {
-			item->destroy();
+		if (Core::App().settings().antiDelete()) {
+			for (const auto &item : toDestroy) {
+				item->markDeleted();
+			}
+		} else {
+			notifyItemsAboutToBeDestroyed(toDestroy);
+			for (const auto &item : toDestroy) {
+				item->destroy();
+			}
 		}
 	}
 	for (const auto &history : historiesToCheck) {

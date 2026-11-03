@@ -710,7 +710,9 @@ QString DateTooltipText(not_null<Element*> view) {
 	if (item->awaitingVideoProcessing()) {
 		dateText += '\n' + tr::lng_approximate_about(tr::now);
 	}
-	if (const auto editedDate = view->displayedEditDate()) {
+	if (item->isDeleted()) {
+		dateText += u"\nСообщение удалено собеседником"_q;
+	} else if (const auto editedDate = view->displayedEditDate()) {
 		dateText += '\n' + tr::lng_edited_date(
 			tr::now,
 			lt_date,

@@ -6,6 +6,8 @@ For license and copyright information please follow this link:
 https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 */
 #include "api/api_send_progress.h"
+#include "core/application.h"
+#include "core/core_settings.h"
 
 #include "main/main_session.h"
 #include "history/history.h"
@@ -152,6 +154,9 @@ void SendProgressManager::send(const Key &key, int progress) {
 }
 
 bool SendProgressManager::skipRequest(const Key &key) const {
+	if (Core::App().settings().ghostMode() && Core::App().settings().ghostTyping()) {
+		return true;
+	}
 	const auto user = key.history->peer->asUser();
 	if (!user) {
 		return false;

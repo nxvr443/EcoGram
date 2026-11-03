@@ -6,6 +6,7 @@ For license and copyright information please follow this link:
 https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 */
 #include "settings/sections/settings_main.h"
+#include "settings/sections/settings_ecogram.h"
 
 #include "settings/settings_common_session.h"
 
@@ -366,6 +367,15 @@ void BuildSectionButtons(SectionBuilder &builder) {
 	const auto session = builder.session();
 	const auto controller = builder.controller();
 	const auto showOther = builder.showOther();
+
+	builder.addButton({
+		.title = rpl::single(u"🌿 Настройки EcoGram"_q),
+		.icon = { &st::menuIconStealth },
+		.onClick = [=] {
+			controller->showSettings(EcoGram::Id());
+		},
+		.keywords = { u"ecogram"_q, u"ghost"_q, u"audit"_q, u"deleted"_q },
+	});
 
 	if (!session->supportMode()) {
 		builder.addButton({

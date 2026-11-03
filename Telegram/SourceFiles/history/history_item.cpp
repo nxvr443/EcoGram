@@ -2347,6 +2347,19 @@ void HistoryItem::destroy() {
 	_history->destroyMessage(this);
 }
 
+void HistoryItem::markDeleted() {
+	if (_isDeleted) {
+		return;
+	}
+	_isDeleted = true;
+	if (const auto view = mainView()) {
+		view->itemDataChanged();
+	}
+	history()->session().changes().messageUpdated(
+		this,
+		Data::MessageUpdate::Flag::Edited);
+}
+
 not_null<Data::Thread*> HistoryItem::notificationThread() const {
 	if (const auto rootId = topicRootId()) {
 		if (const auto forum = _history->asForum()) {

@@ -1320,6 +1320,16 @@ void Settings::addFromSerialized(const QByteArray &serialized) {
 	_chatFiltersHorizontal = (chatFiltersHorizontal == 1);
 	_quickDialogAction = Dialogs::Ui::QuickDialogAction(quickDialogAction);
 	_notificationsVolume = notificationsVolume;
+	_ghostMode = readPref<bool>("eco_ghost_mode", false);
+	_ghostReadHistory = readPref<bool>("eco_ghost_read_history", true);
+	_ghostReadStories = readPref<bool>("eco_ghost_read_stories", true);
+	_ghostTyping = readPref<bool>("eco_ghost_typing", true);
+	_antiDelete = readPref<bool>("eco_anti_delete", true);
+	_ghostMode = readPref<bool>("eco_ghost_mode", false);
+	_ghostReadHistory = readPref<bool>("eco_ghost_read_history", true);
+	_ghostReadStories = readPref<bool>("eco_ghost_read_stories", true);
+	_ghostTyping = readPref<bool>("eco_ghost_typing", true);
+	_antiDelete = readPref<bool>("eco_anti_delete", true);
 }
 
 void Settings::clearPref(std::string_view key) {

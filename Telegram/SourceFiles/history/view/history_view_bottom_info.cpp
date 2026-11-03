@@ -484,10 +484,14 @@ void BottomInfo::layout() {
 
 void BottomInfo::layoutDateText() {
 	const auto updated = (_data.flags & Data::Flag::Updated);
+	const auto deleted = (_data.flags & Data::Flag::Deleted);
 	const auto editedPrimary = !updated
+		&& !deleted
 		&& (_data.flags & Data::Flag::EditedPrimary)
 		&& !(_data.flags & Data::Flag::ForwardedDate);
-	const auto edited = editedPrimary
+	const auto edited = deleted
+		? (u"[удалено] "_q)
+		: editedPrimary
 		? QString()
 		: updated
 		? (tr::lng_ephemeral_updated(tr::now) + ' ')
@@ -691,7 +695,9 @@ BottomInfo::Data BottomInfoDataFromMessage(not_null<Message*> message) {
 			}
 		}
 	}
-	if (const auto editedDate = message->displayedEditDate()) {
+	if (item->isDeleted()) {
+		result.flags |= Flag::Deleted;
+	} else if (const auto editedDate = message->displayedEditDate()) {
 		result.flags |= Flag::Edited;
 		if (item->history()->session().messagePrimaryEditedDate()) {
 			result.flags |= Flag::EditedPrimary;
