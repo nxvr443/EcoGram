@@ -26,3 +26,7 @@ constexpr auto AppVersion = 7003001;
 constexpr auto AppVersionStr = "7.3.1";
 constexpr auto AppBetaVersion = false;
 constexpr auto AppAlphaVersion = TDESKTOP_ALPHA_VERSION;
+
+constexpr auto EcoGramVersion = 1002008;
+constexpr auto EcoGramVersionStr = "1.2.8";
+constexpr auto EcoGramBuildNumber = 28;

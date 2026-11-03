@@ -55,7 +55,7 @@ void EcoGram::setupContent() {
 	header->add(
 		object_ptr<Ui::FlatLabel>(
 			header,
-			rpl::single(u"EcoGram Desktop v" + currentVersionText()),
+			rpl::single(u"EcoGram Desktop v" + QString::fromLatin1(EcoGramVersionStr) + u" ("_q + currentVersionText() + u")"_q),
 			st::settingsSubsectionTitle),
 		st::boxRowPadding);
 
@@ -185,6 +185,21 @@ void EcoGram::setupContent() {
 		{ &st::menuIconLink });
 	repoBtn->setClickedCallback([=] {
 		QDesktopServices::openUrl(QUrl(u"https://github.com/nxvr443/EcoGram"_q));
+	});
+
+	const auto versionBtn = AddButtonWithLabel(
+		content,
+		rpl::single(u"Сведения о сборке"_q),
+		rpl::single(u"v" + QString::fromLatin1(EcoGramVersionStr)),
+		st::settingsButton,
+		{ &st::menuIconInfo });
+	versionBtn->setClickedCallback([=] {
+		controller->show(Ui::MakeInformBox(
+			u"EcoGram Desktop\n\n"
+			u"Версия клиента: v" + QString::fromLatin1(EcoGramVersionStr) + u" (Сборка " + QString::number(EcoGramBuildNumber) + u")\n"
+			u"Базовый стек: Telegram Desktop " + currentVersionText() + u"\n"
+			u"Канал обновлений: Stable Release\n\n"
+			u"Высокопроизводительный форк с оптимизацией сети, аппаратным ускорением, защитой от удаления и скрытным режимом."));
 	});
 
 	Ui::AddSkip(content, st::settingsPrivacySkip);
