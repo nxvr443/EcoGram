@@ -801,60 +801,6 @@ public:
 		return _antiDelete.value();
 	}
 
-	void setGhostMode(bool value) {
-		_ghostMode = value;
-		writePref<bool>("eco_ghost_mode", value);
-	}
-	[[nodiscard]] bool ghostMode() const {
-		return _ghostMode.current();
-	}
-	[[nodiscard]] rpl::producer<bool> ghostModeValue() const {
-		return _ghostMode.value();
-	}
-	[[nodiscard]] rpl::producer<bool> ghostModeChanges() const {
-		return _ghostMode.changes();
-	}
-	void setGhostReadHistory(bool value) {
-		_ghostReadHistory = value;
-		writePref<bool>("eco_ghost_read_history", value);
-	}
-	[[nodiscard]] bool ghostReadHistory() const {
-		return _ghostReadHistory.current();
-	}
-	[[nodiscard]] rpl::producer<bool> ghostReadHistoryValue() const {
-		return _ghostReadHistory.value();
-	}
-	void setGhostReadStories(bool value) {
-		_ghostReadStories = value;
-		writePref<bool>("eco_ghost_read_stories", value);
-	}
-	[[nodiscard]] bool ghostReadStories() const {
-		return _ghostReadStories.current();
-	}
-	[[nodiscard]] rpl::producer<bool> ghostReadStoriesValue() const {
-		return _ghostReadStories.value();
-	}
-	void setGhostTyping(bool value) {
-		_ghostTyping = value;
-		writePref<bool>("eco_ghost_typing", value);
-	}
-	[[nodiscard]] bool ghostTyping() const {
-		return _ghostTyping.current();
-	}
-	[[nodiscard]] rpl::producer<bool> ghostTypingValue() const {
-		return _ghostTyping.value();
-	}
-	void setAntiDelete(bool value) {
-		_antiDelete = value;
-		writePref<bool>("eco_anti_delete", value);
-	}
-	[[nodiscard]] bool antiDelete() const {
-		return _antiDelete.current();
-	}
-	[[nodiscard]] rpl::producer<bool> antiDeleteValue() const {
-		return _antiDelete.value();
-	}
-
 	void setSystemAccentColorEnabled(bool value) {
 		_systemAccentColorEnabled = value;
 	}
@@ -1271,11 +1217,6 @@ private:
 	rpl::variable<bool> _nativeWindowFrame = false;
 	rpl::variable<std::optional<bool>> _systemDarkMode = std::nullopt;
 	rpl::variable<bool> _systemDarkModeEnabled = true;
-	rpl::variable<bool> _ghostMode = false;
-	rpl::variable<bool> _ghostReadHistory = true;
-	rpl::variable<bool> _ghostReadStories = true;
-	rpl::variable<bool> _ghostTyping = true;
-	rpl::variable<bool> _antiDelete = true;
 	rpl::variable<bool> _ghostMode = false;
 	rpl::variable<bool> _ghostReadHistory = true;
 	rpl::variable<bool> _ghostReadStories = true;
